@@ -27,11 +27,16 @@
    setup=yes,
    command=yes]
 
+\def\c!skipheader {skipheader}
+\def\c!asciimode {asciimode}
+
 \setupdatabase
   [\c!separator={,},
    \c!quotechar=,
    \c!commentchar=,
    \c!strip=\v!no,
+   \c!skipheader=\v!no,
+   \c!asciimode=\v!no,
    \c!before=,
    \c!after=,
    \c!first=,
@@ -57,6 +62,8 @@
      type        = "\currentdatabasetype",
      database    = "\currentdatabasename",
      strip       = "\databaseparameter\c!strip",
+     skipheader  = "\databaseparameter\c!skipheader",
+     asciimode   = "\databaseparameter\c!asciimode",
      separator   = \!!bs\databaseparameter\c!separator  \!!es,
      quotechar   = \!!bs\databaseparameter\c!quotechar  \!!es,
      commentchar = \!!bs\databaseparameter\c!commentchar\!!es,

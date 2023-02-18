@@ -59,6 +59,8 @@ function moduledata.database.csv.process(settings)
         local left, right = settings.left or "", settings.right or ""
         local setups = settings.setups or ""
         local strip = settings.strip == v_yes or false
+        local skipheader = settings.skipheader == v_yes or false
+        local asciimode = settings.asciimode == v_yes or false
         local command = settings.command or ""
         separatorchar = (not separatorchar and ",") or separators[separatorchar] or separatorchar
         local separator = type(separatorchar) == "string" and lpegS(separatorchar) or separatorchar
@@ -103,17 +105,22 @@ function moduledata.database.csv.process(settings)
         end
         local found = false
         for i=1,#data do
-            local line = data[i]
-            if not lpegmatch(l_empty,line) and (not checker or not lpegmatch(checker,line)) then
-                if not found then
-                    if setups ~= "" then
-                        context.begingroup()
-                        context.setups { setups }
+            if skipheader and i == 1
+            then
+                do end
+            else
+                local line = data[i]
+                if not lpegmatch(l_empty, line) and (not checker or not lpegmatch(checker, line)) then
+                    if not found then
+                        if setups ~= "" then
+                            context.begingroup()
+                            context.setups { setups }
+                        end
+                        context(before)
+                        found = true
                     end
-                    context(before)
-                    found = true
+                    context(lpegmatch(whatever, line))
                 end
-                context(lpegmatch(whatever,line))
             end
         end
         if found then
